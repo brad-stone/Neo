@@ -31,6 +31,11 @@ def get_db ():
         g.neo4j_db = driver.session ()
     return g.neo4j_db
 
+def serialize_genre(genre):
+    return {
+        'id': genre['id'],
+        'name': genre['name'],
+    }
 
 
 @app.teardown_appcontext
@@ -41,13 +46,19 @@ def close_db(error):
 @app.route("/")
 def get_graph():
     db = get_db()
+    result = db.run('MATCH (genre:Genre) RETURN genre')
+    return [serialize_genre(record['genre']) for record in result]
+    
+'''  
+https://neo4j.com/blog/flask-react-js-developers-neo4j-template/
+
     testmovie = '"The Matrix"'
     results = db.run("MATCH (m:Movie) "
         "WHERE m.title =~ " + testmovie+ " "
         "RETURN m")
     return Response(results, mimetype="application/json")
 
-'''
+
 
     results = '{"title": "The Matrix", "cast": [{"job": "acted", "role": ["Emil"], "name": "Emil Eifrem"}, {"job": "acted", "role": ["Agent Smith"], "name": "Hugo Weaving"}, {"job": "directed", "role": null, "name": "Andy Wachowski"}, {"job": "produced", "role": null, "name": "Joel Silver"}]}'
 '''
