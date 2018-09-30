@@ -13,8 +13,8 @@ Start up Neo4j
 To run ...
     python neo.py
 '''
-
-from flask import Flask, g, Response, request
+import json
+from flask import Flask, g, Response, request, jsonify
 from neo4j.v1 import GraphDatabase, basic_auth
 from json import dumps
 
@@ -46,10 +46,23 @@ def close_db(error):
 @app.route("/")
 def get_graph():
     db = get_db()
+    results = db.run("MATCH (m:Movie) "
+             "RETURN m.title as movie "
+             "LIMIT 4")
+    nodes = []
+    for record in results:
+        nodes.append({"label": "movie", "title": record["movie"]})
+
+    return Response(dumps({"nodes": nodes}), mimetype="application/json")
+
+'''
+     = jsonify(results)
+    return Response(bytes, mimetype="application/json")
+
     result = db.run('MATCH (genre:Genre) RETURN genre')
-    return [serialize_genre(record['genre']) for record in result]
-    
-'''  
+    return Response((serialize_genre(record['genre']) for record in result), mimetype="application/json")
+
+
 https://neo4j.com/blog/flask-react-js-developers-neo4j-template/
 
     testmovie = '"The Matrix"'
