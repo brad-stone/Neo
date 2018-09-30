@@ -1,14 +1,13 @@
 '''
-After creating virtualenv
+After creating virtualenv (e.g. virtualenv neo)
     cd virtualenvs
-    virtualenv test
-    source test/bin/activate
+    virtualenv neo
+    source neo/bin/activate
 Install...
     pip install Flask
     pip install neo4j-driver
 To run ...
-    python test.py
-
+    python neo.py
 '''
 
 from flask import Flask, g, Response, request
