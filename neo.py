@@ -46,12 +46,12 @@ def close_db(error):
 @app.route("/")
 def get_graph():
     db = get_db()
-    results = db.run("MATCH (m:Movie) "
-             "RETURN m.title as movie "
+    results = db.run("MATCH (n:Person) "
+             "RETURN n.name as actorname, n.born as actorborn "
              "LIMIT 4")
     nodes = []
     for record in results:
-        nodes.append({"label": "movie", "title": record["movie"]})
+        nodes.append({"name": record["actorname"], "born": record["actorborn"]})
 
     return Response(dumps({"nodes": nodes}), mimetype="application/json")
 
